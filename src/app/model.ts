@@ -6,4 +6,5 @@ export interface NavItem {
 export interface Task {
   title: string;
   done: boolean;
+  id: string;
 }
