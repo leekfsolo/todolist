@@ -1,12 +1,10 @@
-import React, { SyntheticEvent, useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import CheckboxList from "../common/ui/base/checkbox/CheckboxList";
 import MainLayout from "../common/ui/layout/main-layout";
-import { generateRandomId } from "../common/utils/helper";
-import AddTasksForm from "./addTasksForm";
+import { NavItem } from "./model";
+import ShowTasks from "./showTasks";
 
 import styles from "./App.module.scss";
-import { NavItem, Task } from "./model";
 
 const App = () => {
   const [navItems, setNavItems] = useState<Array<NavItem>>([
@@ -17,11 +15,8 @@ const App = () => {
     { title: "Active", active: false },
     { title: "Completed", active: false },
   ]);
-  const [tasks, setTasks] = useState<Array<Task>>([
-    { title: "Do coding challenges", done: false, id: generateRandomId() },
-    { title: "Do coding challenges", done: false, id: generateRandomId() },
-    { title: "Do coding challenges", done: true, id: generateRandomId() },
-  ]);
+
+  const [taskType, setTaskType] = useState<string>("All");
 
   const changeActiveNavItem = (title: string) => {
     const newNavItems = navItems.map((item) => {
@@ -32,31 +27,12 @@ const App = () => {
     });
 
     setNavItems(newNavItems);
-    showTaskList(title);
-  };
-
-  const showTaskList = (type: string) => {
-    const jsonValue = localStorage.getItem("tasks");
-    let taskList = tasks;
-
-    if (jsonValue) taskList = JSON.parse(jsonValue);
-    if (type === "Active") {
-      taskList = taskList.filter((task) => !task.done);
-    }
-
-    if (type === "Completed") {
-      taskList = taskList.filter((task) => task.done);
-    }
-
-    setTasks(taskList);
   };
 
   useEffect(() => {
     const activeNavItem = navItems.filter((item) => item.active)[0];
-    if (activeNavItem.title === "All") {
-      localStorage.setItem("tasks", JSON.stringify(tasks));
-    }
-  }, [navItems, tasks]);
+    setTaskType(activeNavItem.title);
+  }, [navItems]);
 
   return (
     <MainLayout>
@@ -77,9 +53,7 @@ const App = () => {
         </ul>
       </nav>
 
-      <AddTasksForm setTasks={setTasks} />
-
-      <CheckboxList tasks={tasks} setTasks={setTasks} />
+      <ShowTasks taskType={taskType} />
     </MainLayout>
   );
 };

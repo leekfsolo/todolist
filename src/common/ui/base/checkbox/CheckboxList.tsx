@@ -1,16 +1,17 @@
 import React, { FC } from "react";
 import { Task } from "../../../../app/model";
 
-import styles from "./Checkbox.module.scss";
 import CheckboxItem from "./CheckboxItem";
 
 interface Props {
+  taskType: string;
+  filteredTasks: Array<Task>;
   tasks: Array<Task>;
   setTasks: (tasks: Array<Task>) => void;
 }
 
 const CheckboxList: FC<Props> = (props: Props) => {
-  const { tasks, setTasks } = props;
+  const { taskType, filteredTasks, tasks, setTasks } = props;
 
   const toggleStatusTasks = (id: string) => {
     const newTasks = tasks.map((task) => {
@@ -22,23 +23,23 @@ const CheckboxList: FC<Props> = (props: Props) => {
   };
 
   return (
-    <div className={styles.taskList}>
-      <ul>
-        {tasks.map((task, idx) => {
-          const id = idx.toString();
+    <ul>
+      {filteredTasks.map((task, idx) => {
+        const id = idx.toString();
 
-          return (
-            <li key={idx}>
-              <CheckboxItem
-                id={id}
-                task={task}
-                toggleStatusTasks={toggleStatusTasks}
-              />
-            </li>
-          );
-        })}
-      </ul>
-    </div>
+        return (
+          <CheckboxItem
+            id={id}
+            task={task}
+            tasks={tasks}
+            setTasks={setTasks}
+            toggleStatusTasks={toggleStatusTasks}
+            key={idx}
+            taskType={taskType}
+          />
+        );
+      })}
+    </ul>
   );
 };
 

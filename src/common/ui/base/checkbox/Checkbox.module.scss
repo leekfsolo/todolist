@@ -1,80 +1,84 @@
-@use "../../colors";
+@use "../../assets/colors";
 
-.taskList {
-  width: 100%;
+ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
 
-  ul {
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
+  .taskItem {
+    margin-bottom: 27px;
+    font-family: "Montserrat", sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-    li {
-      margin-bottom: 27px;
+    .checkboxWrapper {
+      font-weight: 500;
+      font-size: 18px;
+      position: relative;
+      padding: 2px 0 0 35px;
+      cursor: pointer;
 
-      .checkboxWrapper {
-        font-weight: 500;
-        font-size: 18px;
-        position: relative;
-        padding: 2px 0 0 35px;
-        cursor: pointer;
+      input {
+        width: 0;
+        height: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
 
-        input {
-          width: 0;
-          height: 0;
-          position: absolute;
-          top: 0;
-          left: 0;
-
-          &:checked ~ .checkbox {
-            background-color: colors.$primary;
-            border: none;
-
-            &::after {
-              display: block;
-            }
-          }
-        }
-
-        .checkbox {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 24px;
-          height: 24px;
-          border: 1px solid colors.$gray-3;
-          border-radius: 4px;
-          box-sizing: border-box;
+        &:checked ~ .checkbox {
+          background-color: colors.$primary;
+          border: none;
 
           &::after {
-            content: "";
-            position: absolute;
-            display: none;
-            left: 8px;
-            top: 2px;
-            height: 14px;
-            width: 5px;
-            border: solid white;
-            border-width: 0 3px 3px 0;
-            transform: rotate(45deg);
-          }
-        }
-
-        &.done {
-          text-decoration: line-through;
-          text-decoration-color: colors.$black-1;
-          text-decoration-thickness: 1px;
-        }
-
-        &:hover input {
-          ~ .checkbox {
-            background-color: colors.$gray-4;
-          }
-
-          &:checked ~ .checkbox {
-            background-color: colors.$primary !important;
+            display: block;
           }
         }
       }
+
+      .checkbox {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 24px;
+        height: 24px;
+        border: 1px solid colors.$gray-3;
+        border-radius: 4px;
+        box-sizing: border-box;
+
+        &::after {
+          content: "";
+          position: absolute;
+          display: none;
+          left: 8px;
+          top: 2px;
+          height: 14px;
+          width: 5px;
+          border: solid white;
+          border-width: 0 3px 3px 0;
+          transform: rotate(45deg);
+        }
+      }
+
+      &.done {
+        text-decoration: line-through;
+        text-decoration-color: colors.$black-1;
+        text-decoration-thickness: 1px;
+      }
+
+      &:hover input {
+        ~ .checkbox {
+          background-color: colors.$gray-4;
+        }
+
+        &:checked ~ .checkbox {
+          background-color: colors.$primary !important;
+        }
+      }
+    }
+
+    .trashBin {
+      cursor: pointer;
     }
   }
 }
