@@ -1,6 +1,6 @@
 import React, { Dispatch, FC, SyntheticEvent, useRef } from "react";
 import { generateRandomId } from "../../common/utils/helper";
-import { taskAction, taskActionType } from "../showTasks";
+import { taskAction, taskActionType } from "../showTasks/reducer";
 
 import styles from "./AddTasksForm.module.scss";
 

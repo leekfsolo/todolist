@@ -1,81 +1,21 @@
 import React, { FC, useEffect, useReducer, useState } from "react";
 
-import { generateRandomId } from "../../common/utils/helper";
 import AddTasksForm from "../addTasksForm";
 import { Task } from "../model";
 import { ReactComponent as Trash } from "../../common/ui/assets/images/trash.svg";
 
 import styles from "../App.module.scss";
 import CheckboxList from "./CheckboxList";
+import { initTasks, taskActionType, taskReducer } from "./reducer";
 
-export enum taskActionType {
-  GET = "GET",
-  ADD = "ADD",
-  TOGGLE = "TOGGLE",
-  DELETE = "DELETE",
-  DELETECOMPLETED = "DELETECOMPLETED",
-}
-export interface taskAction {
-  type: taskActionType;
-  payload?: Task;
-  storage?: Array<Task>;
-}
 interface Props {
   taskType: string;
 }
-
-export const initTasks = [
-  { title: "Do coding challenges", done: false, id: generateRandomId() },
-  { title: "Playing games", done: false, id: generateRandomId() },
-  { title: "Reading books", done: true, id: generateRandomId() },
-];
 
 const ShowTasks: FC<Props> = (props: Props) => {
   const { taskType } = props;
 
   const [filteredTasks, setFilteredTasks] = useState<Array<Task>>(initTasks);
-
-  const taskReducer = (state: Array<Task>, action: taskAction) => {
-    const {
-      type,
-      payload = {
-        title: "Do coding challenges",
-        done: false,
-        id: generateRandomId(),
-      },
-      storage = initTasks,
-    } = action;
-    switch (type) {
-      case taskActionType.GET:
-        return storage;
-
-      case taskActionType.ADD:
-        const newTasks = [payload, ...state];
-        localStorage.setItem("tasks", JSON.stringify(newTasks));
-        return newTasks;
-
-      case taskActionType.TOGGLE:
-        const toggleTasks = state.map((task) => {
-          if (task.id === payload.id) task.done = !task.done;
-          return task;
-        });
-        localStorage.setItem("tasks", JSON.stringify(toggleTasks));
-        return toggleTasks;
-
-      case taskActionType.DELETE:
-        const deleteTasks = state.filter((task) => task.id !== payload.id);
-        localStorage.setItem("tasks", JSON.stringify(deleteTasks));
-        return deleteTasks;
-
-      case taskActionType.DELETECOMPLETED:
-        const deleteCompletedTasks = state.filter((task) => !task.done);
-        localStorage.setItem("tasks", JSON.stringify(deleteCompletedTasks));
-        return deleteCompletedTasks;
-
-      default:
-        return initTasks;
-    }
-  };
   const [tasks, setTasks] = useReducer(taskReducer, initTasks);
 
   useEffect(() => {

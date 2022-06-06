@@ -3,7 +3,7 @@ import { Task } from "../model";
 import { ReactComponent as Trash } from "../../common/ui/assets/images/trash.svg";
 
 import styles from "./ShowTasks.module.scss";
-import { taskAction, taskActionType } from "./ShowTasks";
+import { taskAction, taskActionType } from "./reducer";
 
 interface Props {
   id: string;

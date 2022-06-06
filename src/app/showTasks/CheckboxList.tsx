@@ -2,7 +2,7 @@ import React, { Dispatch, FC } from "react";
 import { Task } from "../model";
 
 import CheckboxItem from "./CheckboxItem";
-import { initTasks, taskAction } from "./ShowTasks";
+import { initTasks, taskAction } from "./reducer";
 
 interface Props {
   taskType: string;
