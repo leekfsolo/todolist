@@ -1,0 +1,33 @@
+@use "../../common/ui/assets/colors";
+
+.addTask {
+  width: 100%;
+  margin-bottom: 32px;
+
+  form {
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+
+    input {
+      border: 1px solid colors.$gray-4;
+      padding: 20px 12px;
+      border-radius: 12px;
+      outline: none;
+      width: 100%;
+      margin-right: 25px;
+    }
+
+    button {
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 14px;
+      padding: 20px 40px;
+      background-color: colors.$primary;
+      color: colors.$white;
+      outline: none;
+      border: none;
+      cursor: pointer;
+    }
+  }
+}

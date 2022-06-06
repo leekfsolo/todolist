@@ -1,26 +1,17 @@
-import React, { FC } from "react";
-import { Task } from "../../../../app/model";
+import React, { Dispatch, FC } from "react";
+import { Task } from "../model";
 
 import CheckboxItem from "./CheckboxItem";
+import { initTasks, taskAction } from "./ShowTasks";
 
 interface Props {
   taskType: string;
   filteredTasks: Array<Task>;
-  tasks: Array<Task>;
-  setTasks: (tasks: Array<Task>) => void;
+  setTasks: Dispatch<taskAction>;
 }
 
 const CheckboxList: FC<Props> = (props: Props) => {
-  const { taskType, filteredTasks, tasks, setTasks } = props;
-
-  const toggleStatusTasks = (id: string) => {
-    const newTasks = tasks.map((task) => {
-      if (task.id === id) task.done = !task.done;
-      return task;
-    });
-
-    setTasks(newTasks);
-  };
+  const { taskType, filteredTasks = initTasks, setTasks } = props;
 
   return (
     <ul>
@@ -31,9 +22,7 @@ const CheckboxList: FC<Props> = (props: Props) => {
           <CheckboxItem
             id={id}
             task={task}
-            tasks={tasks}
             setTasks={setTasks}
-            toggleStatusTasks={toggleStatusTasks}
             key={idx}
             taskType={taskType}
           />

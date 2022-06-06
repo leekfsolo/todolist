@@ -1,10 +1,11 @@
-import React, { FC, SyntheticEvent, useRef } from "react";
+import React, { Dispatch, FC, SyntheticEvent, useRef } from "react";
 import { generateRandomId } from "../../common/utils/helper";
+import { taskAction, taskActionType } from "../showTasks";
 
-import styles from "../App.module.scss";
+import styles from "./AddTasksForm.module.scss";
 
 interface Props {
-  setTasks: (tasks: any) => void;
+  setTasks: Dispatch<taskAction>;
 }
 
 const AddTasksForm: FC<Props> = (props: Props) => {
@@ -18,11 +19,9 @@ const AddTasksForm: FC<Props> = (props: Props) => {
 
     const newTask = taskInputRef.current?.value;
     if (newTask) {
-      setTasks((prevTasks: any) => {
-        return [
-          { title: newTask, done: false, id: generateRandomId() },
-          ...prevTasks,
-        ];
+      setTasks({
+        type: taskActionType.ADD,
+        payload: { title: newTask, done: false, id: generateRandomId() },
       });
     }
 
