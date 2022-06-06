@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { SyntheticEvent, useRef, useState } from "react";
+import { generateRandomId } from "../common/utils/helper";
 
 import styles from "./App.module.scss";
 import { NavItem, Task } from "./model";
@@ -13,10 +14,12 @@ const App = () => {
     { title: "Completed" },
   ]);
   const [tasks, setTasks] = useState<Array<Task>>([
-    { title: "Do coding Challenges", done: false, id: "a1" },
-    { title: "Do coding Challenges", done: false, id: "a2" },
-    { title: "Do coding Challenges", done: true, id: "a3" },
+    { title: "Do coding Challenges", done: false, id: generateRandomId() },
+    { title: "Do coding Challenges", done: false, id: generateRandomId() },
+    { title: "Do coding Challenges", done: true, id: generateRandomId() },
   ]);
+
+  const taskInputRef = useRef<HTMLInputElement>(null);
 
   const changeActiveNavItem = (title: string) => {
     const newNavItems = navItems.map((item) => {
@@ -36,6 +39,22 @@ const App = () => {
     });
 
     setTasks(newTasks);
+  };
+
+  const submitFormHandler = (e: SyntheticEvent) => {
+    e.preventDefault();
+
+    const newTask = taskInputRef.current?.value;
+    if (newTask) {
+      setTasks((prevTasks) => {
+        return [
+          { title: newTask, done: false, id: generateRandomId() },
+          ...prevTasks,
+        ];
+      });
+    }
+
+    if (taskInputRef.current) taskInputRef.current.value = "";
   };
 
   return (
@@ -59,8 +78,8 @@ const App = () => {
         </nav>
 
         <div className={styles.addTask}>
-          <form action="#">
-            <input type="text" placeholder="add details" />
+          <form action="#" onSubmit={submitFormHandler}>
+            <input type="text" placeholder="add details" ref={taskInputRef} />
             <button type="submit">Add</button>
           </form>
         </div>
