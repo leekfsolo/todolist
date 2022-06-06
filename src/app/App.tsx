@@ -1,5 +1,9 @@
-import React, { SyntheticEvent, useRef, useState } from "react";
+import React, { SyntheticEvent, useEffect, useRef, useState } from "react";
+
+import CheckboxList from "../common/ui/base/checkbox/CheckboxList";
+import MainLayout from "../common/ui/layout/main-layout";
 import { generateRandomId } from "../common/utils/helper";
+import AddTasksForm from "./addTasksForm";
 
 import styles from "./App.module.scss";
 import { NavItem, Task } from "./model";
@@ -10,16 +14,14 @@ const App = () => {
       title: "All",
       active: true,
     },
-    { title: "Active" },
-    { title: "Completed" },
+    { title: "Active", active: false },
+    { title: "Completed", active: false },
   ]);
   const [tasks, setTasks] = useState<Array<Task>>([
-    { title: "Do coding Challenges", done: false, id: generateRandomId() },
-    { title: "Do coding Challenges", done: false, id: generateRandomId() },
-    { title: "Do coding Challenges", done: true, id: generateRandomId() },
+    { title: "Do coding challenges", done: false, id: generateRandomId() },
+    { title: "Do coding challenges", done: false, id: generateRandomId() },
+    { title: "Do coding challenges", done: true, id: generateRandomId() },
   ]);
-
-  const taskInputRef = useRef<HTMLInputElement>(null);
 
   const changeActiveNavItem = (title: string) => {
     const newNavItems = navItems.map((item) => {
@@ -30,90 +32,55 @@ const App = () => {
     });
 
     setNavItems(newNavItems);
+    showTaskList(title);
   };
 
-  const toggleStatusTasks = (id: string) => {
-    const newTasks = tasks.map((task) => {
-      if (task.id === id) task.done = !task.done;
-      return task;
-    });
+  const showTaskList = (type: string) => {
+    const jsonValue = localStorage.getItem("tasks");
+    let taskList = tasks;
 
-    setTasks(newTasks);
-  };
-
-  const submitFormHandler = (e: SyntheticEvent) => {
-    e.preventDefault();
-
-    const newTask = taskInputRef.current?.value;
-    if (newTask) {
-      setTasks((prevTasks) => {
-        return [
-          { title: newTask, done: false, id: generateRandomId() },
-          ...prevTasks,
-        ];
-      });
+    if (jsonValue) taskList = JSON.parse(jsonValue);
+    if (type === "Active") {
+      taskList = taskList.filter((task) => !task.done);
     }
 
-    if (taskInputRef.current) taskInputRef.current.value = "";
+    if (type === "Completed") {
+      taskList = taskList.filter((task) => task.done);
+    }
+
+    setTasks(taskList);
   };
 
+  useEffect(() => {
+    const activeNavItem = navItems.filter((item) => item.active)[0];
+    if (activeNavItem.title === "All") {
+      localStorage.setItem("tasks", JSON.stringify(tasks));
+    }
+  }, [navItems, tasks]);
+
   return (
-    <main id={styles.main}>
-      <div className={styles.container}>
-        <h1>#todo</h1>
+    <MainLayout>
+      <h1>#todo</h1>
 
-        <nav className={styles.nav}>
-          <ul>
-            {navItems.map((item, idx) => (
-              <li
-                key={idx}
-                className={styles.navItem}
-                onClick={() => changeActiveNavItem(item.title)}
-              >
-                <span>{item.title}</span>
-                {item.active && <div className={styles.activeBar}></div>}
-              </li>
-            ))}
-          </ul>
-        </nav>
+      <nav className={styles.nav}>
+        <ul>
+          {navItems.map((item, idx) => (
+            <li
+              key={idx}
+              className={styles.navItem}
+              onClick={() => changeActiveNavItem(item.title)}
+            >
+              <span>{item.title}</span>
+              {item.active && <div className={styles.activeBar}></div>}
+            </li>
+          ))}
+        </ul>
+      </nav>
 
-        <div className={styles.addTask}>
-          <form action="#" onSubmit={submitFormHandler}>
-            <input type="text" placeholder="add details" ref={taskInputRef} />
-            <button type="submit">Add</button>
-          </form>
-        </div>
+      <AddTasksForm setTasks={setTasks} />
 
-        <div className={styles.taskList}>
-          <ul>
-            {tasks.map((task, idx) => {
-              const id = idx.toString();
-
-              return (
-                <li key={idx}>
-                  <label
-                    htmlFor={id}
-                    className={`${styles.checkboxWrapper} ${
-                      task.done ? styles.done : ""
-                    }`}
-                  >
-                    {task.title}
-                    <input
-                      type="checkbox"
-                      name="task"
-                      id={id}
-                      checked={task.done}
-                      onChange={() => toggleStatusTasks(task.id)}
-                    />
-                    <span className={styles.checkbox}></span>
-                  </label>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      </div>
-    </main>
+      <CheckboxList tasks={tasks} setTasks={setTasks} />
+    </MainLayout>
   );
 };
 

@@ -1,6 +1,6 @@
 export interface NavItem {
   title: string;
-  active?: boolean;
+  active: boolean;
 }
 
 export interface Task {
