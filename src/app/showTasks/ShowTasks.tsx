@@ -33,7 +33,6 @@ export const initTasks = [
 const ShowTasks: FC<Props> = (props: Props) => {
   const { taskType } = props;
 
-  // const [tasks, setTasks] = useState<Array<Task>>(initTasks);
   const [filteredTasks, setFilteredTasks] = useState<Array<Task>>(initTasks);
 
   const taskReducer = (state: Array<Task>, action: taskAction) => {
